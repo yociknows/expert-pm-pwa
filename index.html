@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>都更實戰 QA 寶典</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'morandi-bg': '#FAF7F2',      
+                        'morandi-card': '#FFFFFF',    
+                        'morandi-primary': '#D4C4B7', 
+                        'morandi-accent': '#BCAAA4',  
+                        'morandi-text': '#5A504B',    
+                        'morandi-tag': '#E8DFD8',     
+                        'morandi-danger': '#E5ADA8'   
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #FAF7F2; }
+        ::-webkit-scrollbar { display: none; }
+        .glass-modal { background: rgba(90, 80, 75, 0.2); backdrop-filter: blur(8px); }
+        .slide-header { border-left: 4px solid #D4C4B7; padding-left: 1rem; }
+        /* 拖曳時的卡片視覺效果 */
+        .sortable-ghost { opacity: 0.4; background-color: #FAF7F2; }
+        .drag-handle { cursor: grab; }
+        .drag-handle:active { cursor: grabbing; }
+    </style>
+</head>
+<body class="text-morandi-text p-4 md:p-8 min-h-screen relative pb-24">
+
+    <header class="mb-10 flex flex-col sm:flex-row justify-between items-start gap-4 max-w-4xl mx-auto">
+        <div class="slide-header">
+            <h1 class="text-3xl font-bold tracking-tight text-morandi-text">都更開發實戰 <span class="font-light text-morandi-accent">| 專家 QA 寶典</span></h1>
+            <p class="text-sm opacity-60 mt-1 uppercase tracking-widest">Urban Renewal Expert Knowledge Base</p>
+        </div>
+        <div class="flex space-x-2 self-end sm:self-auto">
+            <button onclick="resetData()" class="bg-morandi-danger/20 text-morandi-text text-xs font-medium px-4 py-2 rounded-full hover:bg-morandi-danger hover:text-white transition shadow-sm">
+                <i class="fa-solid fa-rotate-left mr-2"></i>重置資料庫
+            </button>
+            <button onclick="exportData()" class="bg-morandi-tag text-xs font-medium px-4 py-2 rounded-full hover:bg-morandi-primary hover:text-white transition shadow-sm">
+                <i class="fa-solid fa-file-export mr-2"></i>匯出備份
+            </button>
+        </div>
+    </header>
+
+    <main id="app-content" class="max-w-4xl mx-auto space-y-10"></main>
+
+    <button onclick="openModal()" class="fixed bottom-8 right-8 bg-morandi-primary text-white w-16 h-16 rounded-full shadow-2xl text-3xl flex items-center justify-center hover:bg-morandi-accent transition-all transform hover:scale-105 active:scale-95">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <div id="qa-modal" class="hidden fixed inset-0 glass-modal flex items-center justify-center p-4 z-50">
+        <div class="bg-morandi-card w-full max-w-lg rounded-3xl p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h2 id="modal-title" class="text-2xl font-bold text-morandi-text mb-6 border-b border-morandi-tag pb-4">新增實戰紀錄</h2>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">所屬模組分類</label>
+                    <select id="input-category" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
+                        <option value="0">💰 一、權益分配篇</option>
+                        <option value="1">🏢 二、選屋與產品篇</option>
+                        <option value="2">⚖️ 三、法規與流程篇</option>
+                        <option value="3">💸 四、稅務與補償篇</option>
+                        <option value="4">💔 五、特殊疑難雜症</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">地主痛點標題</label>
+                    <input type="text" id="input-title" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">地主質疑情境</label>
+                    <textarea id="input-scenario" rows="2" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">專家解圍話術</label>
+                    <textarea id="input-answer" rows="5" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">專業標籤 (用逗號隔開)</label>
+                    <input type="text" id="input-tags" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-4 mt-8">
+                <button onclick="closeModal()" class="px-6 py-2 text-sm font-medium opacity-50 hover:opacity-100 transition">取消</button>
+                <button onclick="saveQA()" class="px-8 py-3 bg-morandi-primary text-white rounded-xl text-sm font-bold shadow-lg hover:bg-morandi-accent transition">儲存資料庫</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const initialData = [
+            { category: "💰 一、權益分配篇", questions: [
+                { title: "為什麼 4 樓跟 2 樓分配公式一樣？", scenario: "我住四樓採光好，價值應該比二三樓高啊！為什麼大家分配公式都一樣？對我不公平！", answer: "大哥大姊，協議合建套用統一公式是保護樓上住戶。改走『權利變換』的話，估價師算出的比例是整棟的平均值。實務上 1 樓店面效益極高，估價特別高，多出的趴數就是從 2 樓以上的住戶平均扣除。真讓估價師精算下來，您 4 樓最後分回的坪數極可能比現在協議合建給您的還要少好幾坪。統一公式其實是建商在幫樓上住戶守住基本盤啦！", tags: ["#強哥金句", "#估價邏輯"] },
+                { title: "一坪換一坪的迷思？", scenario: "以前我們鄰居改建都是一坪換一坪，你們建商怎麼那麼摳做不到？", answer: "以前的建築法規跟現在差很多，以前蓋房子幾乎不用扣除法定的高公設比，而且現在又有嚴格的容積率跟建蔽率限制。如果真要達成室內面積實質的一坪換一坪，除非這個基地的容積獎勵拿到最極限，且新大樓完全不蓋公設（這不可能），否則實務上都必須要透過整體的權利價值去精算，我們不應該陷入數字的表面迷思，要看資產翻倍的實質總價！", tags: ["#容積獎勵", "#分配邏輯"] },
+                { title: "協議合建 vs. 權利變換差別？", scenario: "聽說走都更可以選協議合建或權利變換，這兩個分回比例差在哪？建商扣掉的42%共同負擔都在扣些什麼？", answer: "『協議合建』是地主與建商私下談好比例（例如地主58%、建商42%），合意就簽約，流程快且政府不干預建商的成本。而『權利變換』是公辦的強制分配，建商要把所有蓋房子的營建成本、利息、規劃費等列出清單（也就是共同負擔42%），送交政府審議會一條條審查，通過後再由三家估價師來精算各戶價值。走權變雖然公開透明，但流程繁複，時間會多拖好幾年喔！", tags: ["#權利變換", "#共同負擔"] }
+            ]},
+            { category: "🏢 二、選屋與產品篇", questions: [
+                { title: "何時選屋？選到同一間怎麼辦？會不會有黑箱？", scenario: "我什麼時候可以挑房子？萬一我看中的那一戶別人也想要怎麼辦？你們建商會不會私下先把好樓層留給地主代表或自己人，不公開透明啊？", answer: "大哥大姊，您的顧慮非常正確，『公平透明』絕對是我們的第一原則！通常會在建築『圖面與坪數確認』後，送交政府審查前，舉辦正式的『公開選配大會』。如果是走權利變換，法規更明文保障有 30 天的『選配期』。我們絕對不允許私下黑箱！如果兩位地主看上同一戶，規則很簡單，就是在公開大會上『抽籤決定』。選屋當天會聘請第三方『律師到場見證』，結果也會造冊送交政府都更處審核，您絕對可以一百個放心！", tags: ["#選屋時機", "#公開抽籤", "#律師見證"] },
+                { title: "一層 9 戶出入太複雜，我反對！", scenario: "我們公寓一層才兩戶很單純！新大樓設計圖畫一層九戶出入太複雜、太可怕了，我不簽！", answer: "大哥大姊別擔心，目前的圖面只是為了跟政府申請容積而評估上限的『初步草圖』。都更最棒的地方就在於，未來的公聽會階段大家都可以提出意見，設計圖絕對是可以微調修改的！實務上我們建築師有兩大解法：第一是『樓層分開』，把大坪數地主戶集中在特定樓層；第二是做『假雙拼梯廳』，雖然同層戶數多，但出電梯會用實牆和門禁一分為二，每天回家感覺其實就像一層只有3-4戶一樣單純！", tags: ["#建築解法", "#梯廳設計"] },
+                { title: "公設比動輒 30% 以上，是不是被建商賺走了？", scenario: "以前公寓是零公設，現在新大樓公設比都要 30% 多，扣掉這些我室內變好小，公設是不是建商偷蓋來賺錢的？", answer: "這真的是天大的誤會！現在的高公設比是因為國家建築法規變嚴格了。為了大家的消防安全，法規強制規定 8 樓以上新建築必須配置『雙安全梯』，還要有機房、排煙室、無障礙電梯空間與法定防空避難室。這些都是攸關生命安全的『救命空間』，而不是建商為了賺錢亂蓋的。雖然室內坪數看起來變小，但換來的是防震、消防跟有電梯有管理的現代化生活品質！", tags: ["#公設比爭議", "#建築法規"] },
+                { title: "車位要怎麼分配？為什麼大家都想選黃金樓層？", scenario: "選屋時誰先選？萬一大家都想選黃金樓層或三角窗怎麼辦？為什麼小坪數不能配平面車位？", answer: "選屋的順序在合約裡都會明訂，通常是依照『地主原本的持分價值大小』來排列先後順序，或者在公開大會上用公平抽籤的方式決定。如果遇到重複看中同一個黃金樓層或三角窗，大家就依抽籤順序決定，沒抽到的就選第二志願。至於車位，平面車位數量有限，通常會優先配給大坪數的住戶；小坪數因為權利價值較小，實務上會搭配機械車位，這也是為了確保所有地主都有基本車位可用的公平妥協。", tags: ["#選屋順序", "#車位分配"] }
+            ]},
+            { category: "⚖️ 三、法規與流程篇", questions: [
+                { title: "社區適合走都更還是危老？", scenario: "最近新聞天天在報危老重建，我們社區到底適合走都更還是危老？這兩個獎勵差在哪裡？", answer: "大哥大姊，這主要取決於我們社區的『基地面積』跟『鄰居團結度』。危老重建完全沒有最小面積限制，審查非常快，但大前提是必須要『100% 所有地主同意』，容積獎勵上限通常是 40%（且有時程遞減）。而都市更新需要大面積（通常要1,000平方公尺以上），雖然要走公聽會等程序比較久，但只要『80% 地主同意』就能送件，且容積獎勵最高可以衝到 50%！如果大家極度團結且基地小就走危老；如果面積夠大、有少數不合意戶，走都更最能爭取高獎勵！", tags: ["#危老vs都更", "#法規重點"] },
+                { title: "80% 與 100% 同意的時間差異？", scenario: "既然建商說已經達到 80% 同意門檻了，為什麼不趕快動工，還要一直等那幾個不簽字的釘子戶？", answer: "我們比您更想趕快開工呀！但卡在 80% 同意，剩下不簽字的 20% 鄰居，我們就必須被迫走政府的『權利變換』強制分配程序。這中間要找三家專業估價師鑑價、舉辦公辦公聽會、聽證會，甚至最後如果他們堅持不搬，還要申請政府『代為拆除』。這整套法定程序走下來，起碼會多拖 3 到 5 年。如果大家能發揮鄰居情誼幫忙勸勸，拚到 100% 同意，就能走政府的『快軌專案』（如台北168），免走權變，最快一年內就能核定動工！早點住新家才是實質增值！", tags: ["#快軌專案", "#權利變換"] },
+                { title: "簽了同意書，建商不送件能反悔嗎？", scenario: "我如果現在簽了同意書給你們，萬一你們建商把案子卡在那邊十年不送件，我的房子不就被绑死了？我能撤銷嗎？", answer: "您的擔憂非常合理！請您放心，依照《都市更新條例》法規，只要建商還沒將『都市更新事業計畫』正式向政府報核送件之前，地主都擁有法定的『撤銷權』，隨時可以撤回同意書。此外，為了讓您絕對安心，我們在『合建契約』裡也會白紙黑字押上『送件期限』（例如簽約後半年內必須送件）。時間到了如果建商沒動作，合約會自動失效，您的權益絕對不會被無限期綁死！", tags: ["#撤銷權", "#合約期限"] }
+            ]},
+            { category: "💸 四、稅務與補償篇", questions: [
+                { title: "租金補貼怎麼算？搬遷費何時領？", scenario: "施工這幾年我們要去外面租房子，租金你們全出嗎？搬家費用怎麼算？什麼時候發？", answer: "這部分建商一定幫您準備好！租金補貼通常是依照您現有房屋的『合法建坪』，乘上該區域的租金市場行情來精算。補貼會從您搬空房屋、把鑰匙點交給建商的那一天開始起算，按期發放直到新房子蓋好交屋為止。另外，搬遷費（包含搬出去跟搬回來兩次）會在點交空屋時一併撥款給您。這些財務補貼全部都會明訂在合約裡，絕對有保障！", tags: ["#補貼政策", "#搬遷費用"] },
+                { title: "更新後的房屋稅會暴增嗎？", scenario: "住新大樓好是好，但聽說以後房屋稅跟地價稅會暴增？這樣我哪負擔得起？", answer: "這題您太內行了！政府為了鼓勵都更，準備了超大稅務紅包。第一，在施工興建期間，地價稅是『完全免徵』的。第二，更新完搬進新家後，地價稅與房屋稅直接『減半徵收 2 年』。最棒的是，如果您這間新房子是自己住、沒有賣掉，房屋稅減半還可以向政府申請再延長 10 年，等於共享『12 年房屋稅減半』！如果是走權變，未來您第一次賣掉這間房子時，還能直接減免 40% 的土地增值稅喔！", tags: ["#稅務優惠", "#土增稅減免"] }
+            ]},
+            { category: "💔 五、特殊疑難雜症", questions: [
+                { title: "繼承人找不到、手足不合怎麼辦？", scenario: "我當然想都更，但我這間老房子的持分還有我三個在國外的阿伯，跟一個失聯的堂哥，根本不可能所有人來簽字啊！", answer: "這就是為什麼您需要我們專業建商進場協助！如果是私下一般的協議合建，確實需要產權人 100% 到齊簽名，這案子絕對卡死。但如果走都更，只要整體社區同意度達到 80%，我們就能啟動都更的『權利變換』機制。政府會依法召開審議會，強制把那些找不到人、或者家族內部吵架喬不攏的持分，直接轉換為更新後的權利價值，並依法幫忙提存到法院。您只要顧好您自己的持分，剩下的法律與產權難題，交給我們來幫您解套！", tags: ["#產權糾紛", "#繼承處理"] },
+                { title: "頂樓加蓋能算進分配坪數嗎？", scenario: "我家頂樓加蓋是我當年花了一百多萬蓋的，使用面積多了一倍，這不能跟合法坪數一樣一坪換一坪嗎？", answer: "大哥大姊，我非常理解您當年蓋頂加花的心血，以及目前多一層空間的使用便利性。但在政府的法律界定裡，頂樓加蓋屬於『無產權的違章建築』，沒有登記在權狀上，因此依法『絕對無法』計入法定的都更分配坪數。如果建商私下違法分坪數給您，被樓下鄰居檢舉，整棟都更案就會被政府撤銷。不過為了體諒您的配合，估價師在都更計畫中通常會給予頂加『殘值補貼』或『工程造價補償費』（以現金發放）。我們會極力幫您向審議會爭取最合理的補償金，這樣既合法，也能讓您拿一筆現金來裝潢未來的新家！", tags: ["#頂加處理", "#違建補償"] },
+                { title: "店面還有三年租約，違約金誰來付？", scenario: "我一樓店面租給連鎖超商還有三年約，現在說要都更，房客不肯走，跟我要高額違約金怎麼辦？", answer: "依照《都市更新條例》法規，實施都市更新是可以合法終止租約的，房客依法不能拒絕搬遷。但和氣生財，實務上建商有幾大做法：第一，我們會提早至少半年到一年正式通知商家，讓他們有充裕時間尋覓新地點搬遷；第二，建商發給您的『搬遷費』或一樓店面的『營業損失補貼』，您可以撥一部分去補貼房客的搬遷損失。如果真的遇到房客獅子大開口、賴著不走，都更權變程序裡也有法定的『租賃權利價值協調與補償機制』，政府會介入仲裁，絕對不會讓您一個人孤軍面對房客的索賠！", tags: ["#租約處理", "#店面租客"] }
+            ]}
+        ];
+
+        let qaData = JSON.parse(localStorage.getItem('dugeng_master_db')) || initialData;
+        let currentEditIndices = { cat: -1, q: -1 };
+
+        function renderApp() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            qaData.forEach((cat, cIdx) => {
+                if (cat.questions.length === 0) return;
+                
+                const section = document.createElement('div');
+                section.className = "mb-10";
+                section.innerHTML = `<h2 class="text-sm font-bold uppercase tracking-widest text-morandi-accent flex items-center border-b border-morandi-primary/30 pb-2 mb-4"><i class="fa-solid fa-folder-open mr-2"></i>${cat.category}</h2>`;
+                
+                // 創建一個專門用來包裝題目清單的容器，用來綁定拖曳功能
+                const questionList = document.createElement('div');
+                questionList.className = "space-y-4 sortable-list";
+                questionList.dataset.categoryIndex = cIdx; // 綁定分類的 ID
+                
+                cat.questions.forEach((q, qIdx) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-morandi-card rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition group relative";
+                    card.innerHTML = `
+                        <div class="absolute top-4 right-4 flex space-x-3 opacity-0 group-hover:opacity-100 transition">
+                            <button onclick="openModal(${cIdx}, ${qIdx})" class="text-xs text-morandi-accent hover:text-morandi-text" title="編輯"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteQA(${cIdx}, ${qIdx})" class="text-xs text-morandi-danger" title="刪除"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        
+                        <div class="flex items-start mb-3 pr-12">
+                            <i class="fa-solid fa-grip-vertical mt-1 mr-3 text-morandi-tag hover:text-morandi-accent drag-handle text-lg" title="按住拖曳排序"></i>
+                            <h3 class="font-bold text-lg leading-tight text-morandi-text">📌 ${q.title}</h3>
+                        </div>
+
+                        <div class="flex items-start mb-4 bg-morandi-bg/60 p-3 rounded-xl border-l-2 border-morandi-primary">
+                            <i class="fa-solid fa-user-tie mt-1 mr-3 text-morandi-accent text-xs"></i>
+                            <p class="text-sm leading-relaxed"><span class="font-bold opacity-70">地主：</span>${q.scenario}</p>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-lightbulb mt-1 mr-3 text-amber-500/70 text-xs"></i>
+                            <p class="text-sm leading-relaxed"><span class="font-bold opacity-70">專家解圍：</span>${q.answer}</p>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2 pl-7">
+                            ${q.tags.map(t => `<span class="text-[10px] bg-morandi-tag text-morandi-text font-medium px-2 py-0.5 rounded-md opacity-80">${t}</span>`).join('')}
+                        </div>
+                    `;
+                    questionList.appendChild(card);
+                });
+                
+                section.appendChild(questionList);
+                container.appendChild(section);
+            });
+
+            // 🌟 啟動拖曳功能：在渲染完 DOM 之後綁定 SortableJS
+            document.querySelectorAll('.sortable-list').forEach(list => {
+                new Sortable(list, {
+                    handle: '.drag-handle', // 只有按住「把手圖示」才能拖曳
+                    animation: 200,         // 動畫流暢度
+                    ghostClass: 'sortable-ghost', // 拖曳時的卡片樣式
+                    onEnd: function (evt) {
+                        const cIdx = evt.to.dataset.categoryIndex;
+                        const oldIndex = evt.oldIndex;
+                        const newIndex = evt.newIndex;
+                        
+                        // 當順序改變時，更新我們的 qaData 陣列資料
+                        if (oldIndex !== newIndex) {
+                            const movedItem = qaData[cIdx].questions.splice(oldIndex, 1)[0];
+                            qaData[cIdx].questions.splice(newIndex, 0, movedItem);
+                            
+                            // 自動儲存到 LocalStorage
+                            localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
+                        }
+                    }
+                });
+            });
+        }
+
+        function openModal(cIdx = -1, qIdx = -1) {
+            currentEditIndices = { cat: cIdx, q: qIdx };
+            const modal = document.getElementById('qa-modal');
+            if (cIdx !== -1) {
+                const q = qaData[cIdx].questions[qIdx];
+                document.getElementById('modal-title').innerText = "✏️ 編輯專家紀錄";
+                document.getElementById('input-category').value = cIdx;
+                document.getElementById('input-title').value = q.title;
+                document.getElementById('input-scenario').value = q.scenario;
+                document.getElementById('input-answer').value = q.answer;
+                document.getElementById('input-tags').value = q.tags.join(', ');
+            } else {
+                document.getElementById('modal-title').innerText = "✨ 新增實戰紀錄";
+                document.getElementById('input-category').value = 0;
+                document.getElementById('input-title').value = "";
+                document.getElementById('input-scenario').value = "";
+                document.getElementById('input-answer').value = "";
+                document.getElementById('input-tags').value = "";
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() { document.getElementById('qa-modal').classList.add('hidden'); }
+
+        function saveQA() {
+            const cIdx = parseInt(document.getElementById('input-category').value);
+            const newQA = {
+                title: document.getElementById('input-title').value,
+                scenario: document.getElementById('input-scenario').value,
+                answer: document.getElementById('input-answer').value,
+                tags: document.getElementById('input-tags').value.split(',').map(t => t.trim()).filter(t => t)
+            };
+
+            if (!newQA.title || !newQA.answer) {
+                alert("標題和專家解圍話術是必填的喔！");
+                return;
+            }
+
+            if (currentEditIndices.cat !== -1) {
+                if (currentEditIndices.cat !== cIdx) {
+                    qaData[currentEditIndices.cat].questions.splice(currentEditIndices.q, 1);
+                    qaData[cIdx].questions.push(newQA);
+                } else {
+                    qaData[cIdx].questions[currentEditIndices.q] = newQA;
+                }
+            } else {
+                qaData[cIdx].questions.push(newQA);
+            }
+            
+            localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
+            renderApp();
+            closeModal();
+        }
+
+        function deleteQA(cIdx, qIdx) {
+            if(confirm("確定刪除此筆專家經驗？")) {
+                qaData[cIdx].questions.splice(qIdx, 1);
+                localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
+                renderApp();
+            }
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(qaData, null, 2);
+            navigator.clipboard.writeText(dataStr).then(() => {
+                alert("✨ 最新資料庫程式碼已成功複製到剪貼簿！\n您可以將其貼到記事本備份。");
+            }).catch(() => {
+                alert("複製失敗，請手動至 F12 複製。");
+            });
+        }
+
+        function resetData() {
+            if (confirm("⚠️ 注意：重置將會清除您之前手動新增的所有修改。確定要重置嗎？")) {
+                localStorage.removeItem('dugeng_master_db');
+                qaData = JSON.parse(JSON.stringify(initialData));
+                localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
+                renderApp();
+                alert("✨ 資料庫已成功重置為最完整版本！");
+            }
+        }
+
+        renderApp();
+    </script>
+</body>
+</html>
