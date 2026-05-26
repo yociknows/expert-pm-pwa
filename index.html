@@ -49,13 +49,13 @@
     <header class="mb-10 flex flex-col sm:flex-row justify-between items-start gap-4 max-w-4xl mx-auto">
         <div class="slide-header">
             <h1 class="text-3xl font-bold tracking-tight text-morandi-text">都更開發實戰 <span class="font-light text-morandi-accent">| 專家 QA 寶典</span></h1>
-            <p class="text-sm opacity-60 mt-1 uppercase tracking-widest">Urban Renewal Expert Knowledge Base</p>
+            <p class="text-base opacity-60 mt-1 uppercase tracking-widest">Urban Renewal Expert Knowledge Base</p>
         </div>
         <div class="flex space-x-2 self-end sm:self-auto">
-            <button onclick="resetData()" class="bg-morandi-danger/20 text-morandi-text text-xs font-medium px-4 py-2 rounded-full hover:bg-morandi-danger hover:text-white transition shadow-sm">
+            <button onclick="resetData()" class="bg-morandi-danger/20 text-morandi-text text-sm font-medium px-4 py-2 rounded-full hover:bg-morandi-danger hover:text-white transition shadow-sm">
                 <i class="fa-solid fa-rotate-left mr-2"></i>重置資料庫
             </button>
-            <button onclick="exportData()" class="bg-morandi-tag text-xs font-medium px-4 py-2 rounded-full hover:bg-morandi-primary hover:text-white transition shadow-sm">
+            <button onclick="exportData()" class="bg-morandi-tag text-sm font-medium px-4 py-2 rounded-full hover:bg-morandi-primary hover:text-white transition shadow-sm">
                 <i class="fa-solid fa-file-export mr-2"></i>匯出備份
             </button>
         </div>
@@ -73,8 +73,8 @@
             
             <div class="space-y-5">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">所屬模組分類</label>
-                    <select id="input-category" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
+                    <label class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2">所屬模組分類</label>
+                    <select id="input-category" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-base outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
                         <option value="0">💰 一、權益分配篇</option>
                         <option value="1">🏢 二、選屋與產品篇</option>
                         <option value="2">⚖️ 三、法規與流程篇</option>
@@ -83,26 +83,26 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">地主痛點標題</label>
-                    <input type="text" id="input-title" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
+                    <label class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2">地主痛點標題</label>
+                    <input type="text" id="input-title" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-base outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">地主質疑情境</label>
-                    <textarea id="input-scenario" rows="2" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary"></textarea>
+                    <label class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2">地主質疑情境</label>
+                    <textarea id="input-scenario" rows="3" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-base outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary"></textarea>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">專家解圍話術</label>
-                    <textarea id="input-answer" rows="5" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary"></textarea>
+                    <label class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2">專家解圍話術</label>
+                    <textarea id="input-answer" rows="6" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-base outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary"></textarea>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">專業標籤 (用逗號隔開)</label>
-                    <input type="text" id="input-tags" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-sm outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
+                    <label class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2">專業標籤 (用逗號隔開)</label>
+                    <input type="text" id="input-tags" class="w-full p-3 rounded-xl bg-morandi-bg border-none text-base outline-none ring-1 ring-morandi-tag focus:ring-2 focus:ring-morandi-primary">
                 </div>
             </div>
 
             <div class="flex justify-end space-x-4 mt-8">
-                <button onclick="closeModal()" class="px-6 py-2 text-sm font-medium opacity-50 hover:opacity-100 transition">取消</button>
-                <button onclick="saveQA()" class="px-8 py-3 bg-morandi-primary text-white rounded-xl text-sm font-bold shadow-lg hover:bg-morandi-accent transition">儲存資料庫</button>
+                <button onclick="closeModal()" class="px-6 py-2 text-base font-medium opacity-50 hover:opacity-100 transition">取消</button>
+                <button onclick="saveQA()" class="px-8 py-3 bg-morandi-primary text-white rounded-xl text-base font-bold shadow-lg hover:bg-morandi-accent transition">儲存資料庫</button>
             </div>
         </div>
     </div>
@@ -148,37 +148,36 @@
                 
                 const section = document.createElement('div');
                 section.className = "mb-10";
-                section.innerHTML = `<h2 class="text-sm font-bold uppercase tracking-widest text-morandi-accent flex items-center border-b border-morandi-primary/30 pb-2 mb-4"><i class="fa-solid fa-folder-open mr-2"></i>${cat.category}</h2>`;
+                section.innerHTML = `<h2 class="text-base font-bold uppercase tracking-widest text-morandi-accent flex items-center border-b border-morandi-primary/30 pb-2 mb-4"><i class="fa-solid fa-folder-open mr-2"></i>${cat.category}</h2>`;
                 
-                // 創建一個專門用來包裝題目清單的容器，用來綁定拖曳功能
                 const questionList = document.createElement('div');
-                questionList.className = "space-y-4 sortable-list";
-                questionList.dataset.categoryIndex = cIdx; // 綁定分類的 ID
+                questionList.className = "space-y-5 sortable-list";
+                questionList.dataset.categoryIndex = cIdx; 
                 
                 cat.questions.forEach((q, qIdx) => {
                     const card = document.createElement('div');
-                    card.className = "bg-morandi-card rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition group relative";
+                    card.className = "bg-morandi-card rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 hover:shadow-md transition group relative";
                     card.innerHTML = `
-                        <div class="absolute top-4 right-4 flex space-x-3 opacity-0 group-hover:opacity-100 transition">
-                            <button onclick="openModal(${cIdx}, ${qIdx})" class="text-xs text-morandi-accent hover:text-morandi-text" title="編輯"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteQA(${cIdx}, ${qIdx})" class="text-xs text-morandi-danger" title="刪除"><i class="fa-solid fa-trash"></i></button>
+                        <div class="absolute top-4 right-4 flex space-x-4 opacity-0 group-hover:opacity-100 transition">
+                            <button onclick="openModal(${cIdx}, ${qIdx})" class="text-base text-morandi-accent hover:text-morandi-text" title="編輯"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteQA(${cIdx}, ${qIdx})" class="text-base text-morandi-danger" title="刪除"><i class="fa-solid fa-trash"></i></button>
                         </div>
                         
-                        <div class="flex items-start mb-3 pr-12">
-                            <i class="fa-solid fa-grip-vertical mt-1 mr-3 text-morandi-tag hover:text-morandi-accent drag-handle text-lg" title="按住拖曳排序"></i>
-                            <h3 class="font-bold text-lg leading-tight text-morandi-text">📌 ${q.title}</h3>
+                        <div class="flex items-start mb-4 pr-16">
+                            <i class="fa-solid fa-grip-vertical mt-1 mr-3 text-morandi-tag hover:text-morandi-accent drag-handle text-xl" title="按住拖曳排序"></i>
+                            <h3 class="font-bold text-xl leading-tight text-morandi-text">📌 ${q.title}</h3>
                         </div>
 
-                        <div class="flex items-start mb-4 bg-morandi-bg/60 p-3 rounded-xl border-l-2 border-morandi-primary">
-                            <i class="fa-solid fa-user-tie mt-1 mr-3 text-morandi-accent text-xs"></i>
-                            <p class="text-sm leading-relaxed"><span class="font-bold opacity-70">地主：</span>${q.scenario}</p>
+                        <div class="flex items-start mb-5 bg-morandi-bg/60 p-4 rounded-xl border-l-4 border-morandi-primary">
+                            <i class="fa-solid fa-user-tie mt-1 mr-3 text-morandi-accent text-base"></i>
+                            <p class="text-base leading-relaxed tracking-wide"><span class="font-bold opacity-70">地主：</span>${q.scenario}</p>
                         </div>
-                        <div class="flex items-start">
-                            <i class="fa-solid fa-lightbulb mt-1 mr-3 text-amber-500/70 text-xs"></i>
-                            <p class="text-sm leading-relaxed"><span class="font-bold opacity-70">專家解圍：</span>${q.answer}</p>
+                        <div class="flex items-start mb-2">
+                            <i class="fa-solid fa-lightbulb mt-1 mr-3 text-amber-500/70 text-base"></i>
+                            <p class="text-base leading-relaxed tracking-wide"><span class="font-bold opacity-70">專家解圍：</span>${q.answer}</p>
                         </div>
-                        <div class="mt-4 flex flex-wrap gap-2 pl-7">
-                            ${q.tags.map(t => `<span class="text-[10px] bg-morandi-tag text-morandi-text font-medium px-2 py-0.5 rounded-md opacity-80">${t}</span>`).join('')}
+                        <div class="mt-5 flex flex-wrap gap-2 pl-8">
+                            ${q.tags.map(t => `<span class="text-xs bg-morandi-tag text-morandi-text font-medium px-3 py-1 rounded-md opacity-90">${t}</span>`).join('')}
                         </div>
                     `;
                     questionList.appendChild(card);
@@ -188,23 +187,19 @@
                 container.appendChild(section);
             });
 
-            // 🌟 啟動拖曳功能：在渲染完 DOM 之後綁定 SortableJS
             document.querySelectorAll('.sortable-list').forEach(list => {
                 new Sortable(list, {
-                    handle: '.drag-handle', // 只有按住「把手圖示」才能拖曳
-                    animation: 200,         // 動畫流暢度
-                    ghostClass: 'sortable-ghost', // 拖曳時的卡片樣式
+                    handle: '.drag-handle',
+                    animation: 200,         
+                    ghostClass: 'sortable-ghost',
                     onEnd: function (evt) {
                         const cIdx = evt.to.dataset.categoryIndex;
                         const oldIndex = evt.oldIndex;
                         const newIndex = evt.newIndex;
                         
-                        // 當順序改變時，更新我們的 qaData 陣列資料
                         if (oldIndex !== newIndex) {
                             const movedItem = qaData[cIdx].questions.splice(oldIndex, 1)[0];
                             qaData[cIdx].questions.splice(newIndex, 0, movedItem);
-                            
-                            // 自動儲存到 LocalStorage
                             localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
                         }
                     }
