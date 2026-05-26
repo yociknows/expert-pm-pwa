@@ -14,8 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    
     <script>
         tailwind.config = {
             theme: {
@@ -38,10 +36,6 @@
         ::-webkit-scrollbar { display: none; }
         .glass-modal { background: rgba(90, 80, 75, 0.2); backdrop-filter: blur(8px); }
         .slide-header { border-left: 4px solid #D4C4B7; padding-left: 1rem; }
-        /* 拖曳時的卡片視覺效果 */
-        .sortable-ghost { opacity: 0.4; background-color: #FAF7F2; }
-        .drag-handle { cursor: grab; }
-        .drag-handle:active { cursor: grabbing; }
     </style>
 </head>
 <body class="text-morandi-text p-4 md:p-8 min-h-screen relative pb-24">
@@ -63,7 +57,7 @@
 
     <main id="app-content" class="max-w-4xl mx-auto space-y-10"></main>
 
-    <button onclick="openModal()" class="fixed bottom-8 right-8 bg-morandi-primary text-white w-16 h-16 rounded-full shadow-2xl text-3xl flex items-center justify-center hover:bg-morandi-accent transition-all transform hover:scale-105 active:scale-95">
+    <button onclick="openModal()" class="fixed bottom-8 right-8 bg-morandi-primary text-white w-16 h-16 rounded-full shadow-2xl text-3xl flex items-center justify-center hover:bg-morandi-accent transition-all transform hover:scale-105 active:scale-95 z-40">
         <i class="fa-solid fa-plus"></i>
     </button>
 
@@ -115,7 +109,7 @@
                 { title: "協議合建 vs. 權利變換差別？", scenario: "聽說走都更可以選協議合建或權利變換，這兩個分回比例差在哪？建商扣掉的42%共同負擔都在扣些什麼？", answer: "『協議合建』是地主與建商私下談好比例（例如地主58%、建商42%），合意就簽約，流程快且政府不干預建商的成本。而『權利變換』是公辦的強制分配，建商要把所有蓋房子的營建成本、利息、規劃費等列出清單（也就是共同負擔42%），送交政府審議會一條條審查，通過後再由三家估價師來精算各戶價值。走權變雖然公開透明，但流程繁複，時間會多拖好幾年喔！", tags: ["#權利變換", "#共同負擔"] }
             ]},
             { category: "🏢 二、選屋與產品篇", questions: [
-                { title: "何時選屋？選到同一間怎麼辦？會不會有黑箱？", scenario: "我什麼時候可以挑房子？萬一我看中的那一戶別人也想要怎麼辦？你們建商會不會私下先把好樓層留給地主代表或自己人，不公開透明啊？", answer: "大哥大姊，您的顧慮非常正確，『公平透明』絕對是我們的第一原則！通常會在建築『圖面與坪數確認』後，送交政府審查前，舉辦正式的『公開選配大會』。如果是走權利變換，法規更明文保障有 30 天的『選配期』。我們絕對不允許私下黑箱！如果兩位地主看上同一戶，規則很簡單，就是在公開大會上『抽籤決定』。選屋當天會聘請第三方『律師到場見證』，結果也會造冊送交政府都更處審核，您絕對可以一百個放心！", tags: ["#選屋時機", "#公開抽籤", "#律師見證"] },
+                { title: "何時選屋？選到同一間怎麼辦？會不會有黑箱？", scenario: "我什麼時候可以挑房子？萬一我看中的那一戶別人也想要怎麼辦？你們建商會不會私下先把好樓層留給地主代表或自己人，不公開透明啊？", answer: "大哥/大姊，這點您完全不用擔心！選屋流程正是都更最公開透明的地方。第一步，當我們社區同意度達到 8 成左右，我們就會請建築師畫出立體圖面，並且『逐戶』詢問大家初步的格局需求。第二步，等到『事業計畫』送審後，圖面設計完整了，才會召開正式的『選屋大會』。萬一兩位地主看上同一戶，就是在律師見證下『公開抽籤』！甚至送件後您如果還有想法，在『公開展覽』與『公聽會』期間都能提出，大家想蓋什麼樣的房子，是你們自己可以參與決定的喔！", tags: ["#選屋時機", "#公聽會", "#公開抽籤", "#參與感"] },
                 { title: "一層 9 戶出入太複雜，我反對！", scenario: "我們公寓一層才兩戶很單純！新大樓設計圖畫一層九戶出入太複雜、太可怕了，我不簽！", answer: "大哥大姊別擔心，目前的圖面只是為了跟政府申請容積而評估上限的『初步草圖』。都更最棒的地方就在於，未來的公聽會階段大家都可以提出意見，設計圖絕對是可以微調修改的！實務上我們建築師有兩大解法：第一是『樓層分開』，把大坪數地主戶集中在特定樓層；第二是做『假雙拼梯廳』，雖然同層戶數多，但出電梯會用實牆和門禁一分為二，每天回家感覺其實就像一層只有3-4戶一樣單純！", tags: ["#建築解法", "#梯廳設計"] },
                 { title: "公設比動輒 30% 以上，是不是被建商賺走了？", scenario: "以前公寓是零公設，現在新大樓公設比都要 30% 多，扣掉這些我室內變好小，公設是不是建商偷蓋來賺錢的？", answer: "這真的是天大的誤會！現在的高公設比是因為國家建築法規變嚴格了。為了大家的消防安全，法規強制規定 8 樓以上新建築必須配置『雙安全梯』，還要有機房、排煙室、無障礙電梯空間與法定防空避難室。這些都是攸關生命安全的『救命空間』，而不是建商為了賺錢亂蓋的。雖然室內坪數看起來變小，但換來的是防震、消防跟有電梯有管理的現代化生活品質！", tags: ["#公設比爭議", "#建築法規"] },
                 { title: "車位要怎麼分配？為什麼大家都想選黃金樓層？", scenario: "選屋時誰先選？萬一大家都想選黃金樓層或三角窗怎麼辦？為什麼小坪數不能配平面車位？", answer: "選屋的順序在合約裡都會明訂，通常是依照『地主原本的持分價值大小』來排列先後順序，或者在公開大會上用公平抽籤的方式決定。如果遇到重複看中同一個黃金樓層或三角窗，大家就依抽籤順序決定，沒抽到的就選第二志願。至於車位，平面車位數量有限，通常會優先配給大坪數的住戶；小坪數因為權利價值較小，實務上會搭配機械車位，這也是為了確保所有地主都有基本車位可用的公平妥協。", tags: ["#選屋順序", "#車位分配"] }
@@ -151,21 +145,31 @@
                 section.innerHTML = `<h2 class="text-base font-bold uppercase tracking-widest text-morandi-accent flex items-center border-b border-morandi-primary/30 pb-2 mb-4"><i class="fa-solid fa-folder-open mr-2"></i>${cat.category}</h2>`;
                 
                 const questionList = document.createElement('div');
-                questionList.className = "space-y-5 sortable-list";
-                questionList.dataset.categoryIndex = cIdx; 
+                questionList.className = "space-y-5";
                 
                 cat.questions.forEach((q, qIdx) => {
                     const card = document.createElement('div');
-                    card.className = "bg-morandi-card rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 hover:shadow-md transition group relative";
+                    card.className = "bg-morandi-card rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 relative";
+                    
+                    // 🌟 新增：常駐的右上角控制按鈕區 (手機直接可見，包含上下箭頭)
                     card.innerHTML = `
-                        <div class="absolute top-4 right-4 flex space-x-4 opacity-0 group-hover:opacity-100 transition">
-                            <button onclick="openModal(${cIdx}, ${qIdx})" class="text-base text-morandi-accent hover:text-morandi-text" title="編輯"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteQA(${cIdx}, ${qIdx})" class="text-base text-morandi-danger" title="刪除"><i class="fa-solid fa-trash"></i></button>
+                        <div class="absolute top-4 right-4 flex space-x-2 bg-morandi-card rounded-lg p-1 opacity-90 border border-gray-50 shadow-sm">
+                            <button onclick="moveUp(${cIdx}, ${qIdx})" class="${qIdx === 0 ? 'hidden' : ''} text-lg w-8 h-8 flex items-center justify-center text-morandi-accent hover:text-morandi-text bg-morandi-bg rounded-md transition" title="上移">
+                                <i class="fa-solid fa-arrow-up"></i>
+                            </button>
+                            <button onclick="moveDown(${cIdx}, ${qIdx})" class="${qIdx === cat.questions.length - 1 ? 'hidden' : ''} text-lg w-8 h-8 flex items-center justify-center text-morandi-accent hover:text-morandi-text bg-morandi-bg rounded-md transition" title="下移">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </button>
+                            
+                            <div class="w-px bg-gray-200 mx-1"></div> <button onclick="openModal(${cIdx}, ${qIdx})" class="text-lg w-8 h-8 flex items-center justify-center text-morandi-accent hover:text-morandi-text bg-morandi-bg rounded-md transition" title="編輯">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteQA(${cIdx}, ${qIdx})" class="text-lg w-8 h-8 flex items-center justify-center text-morandi-danger hover:text-white hover:bg-morandi-danger bg-morandi-danger/10 rounded-md transition" title="刪除">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </div>
                         
-                        <div class="flex items-start mb-4 pr-16">
-                            <i class="fa-solid fa-grip-vertical mt-1 mr-3 text-morandi-tag hover:text-morandi-accent drag-handle text-xl" title="按住拖曳排序"></i>
-                            <h3 class="font-bold text-xl leading-tight text-morandi-text">📌 ${q.title}</h3>
+                        <div class="flex items-start mb-4 pr-[140px]"> <h3 class="font-bold text-xl leading-tight text-morandi-text">📌 ${q.title}</h3>
                         </div>
 
                         <div class="flex items-start mb-5 bg-morandi-bg/60 p-4 rounded-xl border-l-4 border-morandi-primary">
@@ -186,25 +190,28 @@
                 section.appendChild(questionList);
                 container.appendChild(section);
             });
+        }
 
-            document.querySelectorAll('.sortable-list').forEach(list => {
-                new Sortable(list, {
-                    handle: '.drag-handle',
-                    animation: 200,         
-                    ghostClass: 'sortable-ghost',
-                    onEnd: function (evt) {
-                        const cIdx = evt.to.dataset.categoryIndex;
-                        const oldIndex = evt.oldIndex;
-                        const newIndex = evt.newIndex;
-                        
-                        if (oldIndex !== newIndex) {
-                            const movedItem = qaData[cIdx].questions.splice(oldIndex, 1)[0];
-                            qaData[cIdx].questions.splice(newIndex, 0, movedItem);
-                            localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
-                        }
-                    }
-                });
-            });
+        // 🌟 新增：上移功能
+        function moveUp(cIdx, qIdx) {
+            if (qIdx > 0) {
+                const temp = qaData[cIdx].questions[qIdx];
+                qaData[cIdx].questions[qIdx] = qaData[cIdx].questions[qIdx - 1];
+                qaData[cIdx].questions[qIdx - 1] = temp;
+                localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
+                renderApp();
+            }
+        }
+
+        // 🌟 新增：下移功能
+        function moveDown(cIdx, qIdx) {
+            if (qIdx < qaData[cIdx].questions.length - 1) {
+                const temp = qaData[cIdx].questions[qIdx];
+                qaData[cIdx].questions[qIdx] = qaData[cIdx].questions[qIdx + 1];
+                qaData[cIdx].questions[qIdx + 1] = temp;
+                localStorage.setItem('dugeng_master_db', JSON.stringify(qaData));
+                renderApp();
+            }
         }
 
         function openModal(cIdx = -1, qIdx = -1) {
